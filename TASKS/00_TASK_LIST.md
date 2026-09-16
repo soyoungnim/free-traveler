@@ -1,0 +1,285 @@
+# Free Traveler — Task List
+
+- **Document ID:** TASKS-00-001
+- **선행 검사:** `python3 scripts/validate_inputs.py` → `VALIDATE_INPUTS_PASS (11/11 checks passed)` 확인 완료(본 문서 생성 직전 실행)
+- **기반 문서:** `docs/02_SRS_BASELINE.md`, `docs/PROJECT_SCOPE.md`, `docs/UIUX_TRACEABILITY.md`, `design-reference/D-001/DESIGN.md`, `design-reference/UI_CONTRACT.md`, `design-reference/SCREEN_ROUTE_CONTRACT.json`, 현재 `src/app` 파일 트리(`page.tsx`, `layout.tsx`, `globals.css`, `favicon.ico`만 존재)
+- **범위:** Task 정의만 포함한다. 구현 코드, Branch, Commit, Issue는 생성하지 않는다.
+
+---
+
+## 요약
+
+| 구분 | 수 |
+|---|---:|
+| **총 Task 수** | **63** |
+| PAGE_OWNER | 5 |
+| COMPONENT | 32 |
+| DATA | 3 |
+| DB | 4 |
+| API | 6 |
+| CI_OPS / MANUAL / RELEASE | 6 |
+| TEST_UNIT | 3 |
+| TEST_RLS | 1 |
+| TEST_E2E | 3 |
+
+| Requirement 구분 | 수 |
+|---|---:|
+| 총 Requirement(REQ-FUNC-001~080, REQ-NF-001~034) | 114 |
+| IMPLEMENT 계열 → Task List에 연결 | 96 |
+| EXCLUDED → §3 NON_IMPLEMENTATION 표에 기록(Task 없음) | 18 |
+| **누락된 Requirement ID** | **없음(0) — §4 Requirement Coverage에서 114/114 확인** |
+
+---
+
+## 1. 열 정의
+
+`Seq, Task ID, 제목, Category, Implementation Status, Requirement Ref, Screen, Route, Page Entry, Depends On, Expected Files, Functional AC, Visual AC, Security/Privacy AC, Verify, Priority`
+
+- **Category**: `PAGE_OWNER` / `COMPONENT` / `DATA` / `DB` / `API` / `CI_OPS` / `MANUAL` / `RELEASE` / `TEST_UNIT` / `TEST_RLS` / `TEST_E2E`
+- **Implementation Status**: `PROJECT_SCOPE.md` 표기를 승계(IMPLEMENT / IMPLEMENT(축소) / IMPLEMENT(최선노력) / IMPLEMENT(목표)). 여러 Requirement를 묶은 Task는 가장 제한적인 표기를 대표값으로 쓴다.
+- **Screen/Route/Page Entry**: 해당 없는 Task는 `-`
+- **Verify**: 이 Task의 완료를 검증할 Test Task ID(들) 또는 `MANUAL-*`/`RELEASE-*`
+
+---
+
+## 2. Task List
+
+| Seq | Task ID | 제목 | Category | Implementation Status | Requirement Ref | Screen | Route | Page Entry | Depends On | Expected Files | Functional AC | Visual AC | Security/Privacy AC | Verify | Priority |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | PAGE-SCR001 | SCR-001 메인 페이지 조립 | PAGE_OWNER | IMPLEMENT | REQ-FUNC-001~010,047~054,064,065,067~069,079; REQ-NF-004,006,023 | SCR-001 | `/` | `src/app/page.tsx` | CMP-SCR001-SEARCH-FILTER, CMP-SCR001-DESTINATION-CARD, CMP-SCR001-DEST-DRAWER, CMP-SCR001-SAFETY-DRAWER, CMP-SCR001-RECENT-MATES, CMP-SCR001-ABOUT-TEASER, CMP-GLOBAL-HEADER-FOOTER, DATA-DESTINATIONS, DATA-SAFETY, DATA-REPRESENTATIVE | `src/app/page.tsx`(modify, Next.js starter 콘텐츠 전량 제거) | Section 순서 Hero→국내 6→해외 6→여행 동기 6→국가별 주의사항 6→최근 동행글 3(또는 Empty State)→free_traveler 소개를 정확히 이 순서로 조립; Section별 데이터 출처 = Hero/필터: 클라이언트 상태, 국내·해외 카드: `DATA-DESTINATIONS`, 주의사항 카드: `DATA-SAFETY`, 동행글: `API-MATES-READ`, 소개: `DATA-REPRESENTATIVE`; 최소 콘텐츠 수 국내 6·해외 6·테마 6·안전 6·동행 3 충족; Desktop 3~4열/Mobile 1열 반응형 카드 밀도; Lorem ipsum·"준비 중"·"정보 확인 필요"·내용 없는 Card 금지; 최근 동행글 0건 시 이유+이용 방법+"동행 글 작성하기" CTA를 갖춘 완성형 Empty State 필수; `API-MATES-READ` 응답 대기 중 최근 동행글 Section은 카드 모양 Skeleton 표시, 로드 실패 시 해당 Section만 재시도 오류로 대체 | D-001 코랄 CTA 1개/Section 이하, 12px 카드 radius, Hero 520~560px로 다음 Section 상단 노출, Airbnb 상표 요소·구매/예약/결제 UI 없음 | 즐겨찾기는 `localStorage`만 사용, 서버 미저장 | E2E-PUBLIC-SMOKE, MANUAL-A11Y-CHECK, MANUAL-PERF-CHECK | P0 |
+| 2 | PAGE-SCR002 | SCR-002 대표 소개 페이지 조립 | PAGE_OWNER | IMPLEMENT | REQ-FUNC-057~063; REQ-NF-006 | SCR-002 | `/about` | `src/app/about/page.tsx` | CMP-SCR002-HERO-STATS, CMP-SCR002-BIO, CMP-SCR002-TIMELINE, CMP-SCR002-COUNTRY-CHIPS, CMP-SCR002-GALLERY, CMP-SCR002-RECOMMENDED-DEST-CTA, CMP-GLOBAL-HEADER-FOOTER, DATA-REPRESENTATIVE, DATA-DESTINATIONS | `src/app/about/page.tsx`(create) | Section 순서 Profile Hero→여행 지표→소개·철학→Timeline→방문 국가→Gallery→기억에 남는 여행지+CTA를 정확히 이 순서로 조립; 전 Section 데이터 출처 = `DATA-REPRESENTATIVE`(추천 여행지 카드만 `DATA-DESTINATIONS` 교차 참조); 최소 콘텐츠 수 Timeline 6개·방문국가 30개·Gallery 사진 8개·추천 여행지 4개 충족; Desktop 3~4열/Mobile 1열; Lorem ipsum·"준비 중" 금지, 빈 링크(문의/SNS)는 렌더링 생략(빈 Card 아님); 정적 데이터라 네트워크 Loading 없음, Gallery 이미지 lazy load 중 Placeholder 표시, 참조 여행지 없는 추천 카드는 목록에서만 제외 | 50+ Trips/30+ Countries 단일 데이터 소스로 홈(SCR-001)과 수치 일치, 사진마다 실제 장소 alt 텍스트 | 대표 이미지 alt·출처 텍스트만 기록(라이선스 승인 워크플로 없음) | E2E-PUBLIC-SMOKE, MANUAL-A11Y-CHECK | P0 |
+| 3 | PAGE-SCR003 | SCR-003 통합 여행 준비 페이지 조립 | PAGE_OWNER | IMPLEMENT | REQ-FUNC-011~032,080; REQ-NF-004,017 | SCR-003 | `/travel-tools` | `src/app/travel-tools/page.tsx` | CMP-SCR003-TAB-SHELL, CMP-SCR003-FLIGHT-TAB, CMP-SCR003-HOTEL-TAB, CMP-SCR003-MATE-TAB, CMP-GLOBAL-HEADER-FOOTER, API-MATES-WRITE | `src/app/travel-tools/page.tsx`(create) | Section 순서 Intro→탭(항공/숙소/동행)→여행정보 Form→입력 요약·외부 이동→찾기 Tip 3개→동행 작성 또는 로그인 안내·안전 안내를 이 순서로 조립; 세 탭은 각각 `CMP-SCR003-FLIGHT-TAB`/`CMP-SCR003-HOTEL-TAB`/`CMP-SCR003-MATE-TAB`가 소유하며 입력·검증·완료 상태를 서로 완전히 분리; 데이터 출처 = 항공·숙소는 클라이언트 상태만, 동행 작성은 `API-MATES-WRITE`; Tip 3개 실 콘텐츠 필수; Lorem ipsum·"준비 중"·"정보 확인 필요" 금지; 미인증 상태의 동행 탭은 빈 Form이 아닌 로그인/성인확인 안내 완성형 화면(Unauthorized 상태, `/account` CTA 포함)으로 대체; 외부 이동·제출 오류는 해당 탭 내부에만 표시(다른 탭·Section 영향 없음) | 코랄 CTA는 탭별 1개("보러 가기"/"작성하기"), 비전달 고지 문구 상시 노출 | 항공·호텔 입력값(국가·지역·날짜)은 서버 DB·로그·URL 쿼리에 전달하지 않고 브라우저 상태로만 유지(`CON-01`,`CON-02`) | E2E-TRAVEL-TOOLS, UNIT-TRAVEL-DATES, UNIT-CONTACT-DETECTION | P0 |
+| 4 | PAGE-SCR004 | SCR-004 동행 조회 페이지 조립 | PAGE_OWNER | IMPLEMENT | REQ-FUNC-030,033~037,039,040,043; REQ-NF-004,019 | SCR-004 | `/mates` | `src/app/mates/page.tsx` | CMP-SCR004-FILTER-LIST, CMP-SCR004-DETAIL-PANEL, CMP-SCR004-APPLICATION, CMP-SCR004-REPORT-BLOCK, CMP-GLOBAL-HEADER-FOOTER, API-MATES-READ, API-MATES-APPLICATIONS, API-MODERATION | `src/app/mates/page.tsx`(create) | Section 순서 Intro(작성 CTA)→Filter·결과 요약→동행글 목록(최대 8개 우선 노출)→상세(Desktop 좌우 분할/Mobile Drawer)→신청 방법 3단계→안전·신고·차단 안내+CTA를 이 순서로 조립; 데이터 출처 = `API-MATES-READ`(목록/상세), `API-MATES-APPLICATIONS`(참가), `API-MODERATION`(신고/차단); Desktop 좌우 분할/Mobile Drawer 반응형 전환; Lorem ipsum·"준비 중" 금지; 검색 결과 0건 시 필터 초기화+이용 방법+"동행 글 작성하기" CTA를 갖춘 완성형 Empty State 필수; 목록/상세에 연락처(전화번호·이메일·메신저 ID) 노출 금지; API 응답 대기 중 목록·상세는 Skeleton 표시, 로드 실패 시 해당 Section만 재시도 오류로 대체; 미인증 상태의 참가·신고·차단 시도는 로그인/성인확인 안내 CTA로 대체(설명 없는 비활성 버튼 금지) | 모집중/마감 배지는 색상 단독이 아닌 텍스트 라벨 병기 | 차단 관계 상호 비노출, RLS로 비공개 요청 데이터 접근 제한 | E2E-MATE-AUTH, UNIT-MATE-STATE | P0 |
+| 5 | PAGE-SCR005 | SCR-005 계정·관리 페이지 조립 | PAGE_OWNER | IMPLEMENT | REQ-FUNC-028,029,036,038,041,042,045,066,077; REQ-NF-018 | SCR-005 | `/account` | `src/app/account/page.tsx` | CMP-SCR005-AUTH, CMP-SCR005-PROFILE, CMP-SCR005-MY-ACTIVITY, CMP-SCR005-ADMIN, CMP-GLOBAL-HEADER-FOOTER, API-ACCOUNT, API-ADMIN-SETTINGS, CMP-SCR003-MATE-TAB | `src/app/account/page.tsx`(create) | Guest/Adult Member/Moderator·Admin 중 현재 역할의 Intro→핵심 작업→도움말 또는 다음 행동만 렌더링(역할에 없는 관리 영역 렌더링 금지); Guest=`CMP-SCR005-AUTH`, Member=`CMP-SCR005-PROFILE`+`CMP-SCR005-MY-ACTIVITY`, Admin=`CMP-SCR005-ADMIN`; 데이터 출처 = `API-ACCOUNT`/`API-ADMIN-SETTINGS`; 내 글 수정 Form은 `CMP-SCR003-MATE-TAB` 재사용; Lorem ipsum·"준비 중" 금지; 내 글/참가 요청/차단 목록 0건 시 각각 완성형 Empty State(이유+이용 방법+CTA); 세션 확인 중에만 전체화면 Loading 허용(D-001 예외), 이후 각 목록은 영역별 Skeleton, 로드 실패는 해당 영역에만 재시도 오류로 대체 | 역할 전환 시 레이아웃 급격한 재배치 없이 탭/영역만 교체 | 정확한 생년월일 미저장(`is_adult`+`adult_verified_at`만), 탈퇴 시 즉시 비식별화 | E2E-MATE-AUTH, TEST-RLS-BASIC | P0 |
+| 6 | CMP-SCR001-SEARCH-FILTER | SCR-001 검색·필터·탭 로직 | COMPONENT | IMPLEMENT | REQ-FUNC-001,002,003,005,010,067; REQ-NF-004 | SCR-001 | `/` | - | DATA-DESTINATIONS | `src/app/_components/scr001/SearchFilterBar.tsx`(create) | 국내/해외 탭 분기, 국가·도시·계절·테마·기간 AND 필터, 키워드 검색, 빈 결과 시 안내+초기화, 필터 상태 URL query 동기화; 빈 결과 Empty 문구는 "정보 확인 필요" 등 모호 표현 금지, 조건 완화 안내 제공 | 코랄 pill 검색바, 필터 Chip 선택 시 coral-soft 배경 | 해당 없음 | UNIT-TRAVEL-DATES(날짜 필터 경계), E2E-PUBLIC-SMOKE | P0 |
+| 7 | CMP-SCR001-DESTINATION-CARD | 여행지 카드(즐겨찾기 포함) | COMPONENT | IMPLEMENT(축소) | REQ-FUNC-007,068; REQ-NF-006 | SCR-001 | `/` | - | DATA-DESTINATIONS | `src/app/_components/scr001/DestinationCard.tsx`(create) | 카드 클릭 시 상세 Drawer 오픈 트리거, 즐겨찾기 토글(중복 방지); 내용 없는 빈 Card 금지 | 4:3 이미지 `next/image` lazy load, 12px radius, alt는 실제 장소 설명 문장 | 즐겨찾기는 `localStorage`에만 저장, 서버/DB 미전송 | E2E-PUBLIC-SMOKE | P0 |
+| 8 | CMP-SCR001-DEST-DRAWER | 여행지 상세 Drawer | COMPONENT | IMPLEMENT | REQ-FUNC-004,006,009,069 | SCR-001 | `/` | - | DATA-DESTINATIONS, CMP-SCR001-SAFETY-DRAWER | `src/app/_components/scr001/DestinationDrawer.tsx`(create) | 소개·명소 5+·추천시기·1일/3일 일정·예산·교통·음식 3+·에티켓·출처·수정일 표시, 해외 여행지는 안전정보 Drawer 연결, 하단 관련 여행지 최대 6개, 공유 버튼(Web Share/URL 복사 폴백); 필수 필드 누락 시 게시 데이터 자체가 없어야 함(콘텐츠 게이트 선행, `CI-CONTENT-VALIDATION` 참조) | Drawer `rounded.lg`, `shadow.card`, scrim 50% | 해당 없음 | E2E-PUBLIC-SMOKE | P0 |
+| 9 | CMP-SCR001-SAFETY-DRAWER | 국가 안전정보 Drawer | COMPONENT | IMPLEMENT | REQ-FUNC-047~054 | SCR-001 | `/` | - | DATA-SAFETY | `src/app/_components/scr001/SafetyDrawer.tsx`(create) | 8개 카테고리, 출처·확인일·편집자 표시, 외교부 링크(`noopener,noreferrer`), stale 경고(렌더링 시 `verified_at` 기준 7일 계산), 중대 경보 상단 텍스트 라벨, 국가·지역 범위 구분, 긴급연락처, 면책 고지; 색상 단독으로 경보 단계 구분 금지 | 경고는 `color.warning`/`color.advisory`(코랄 아님) + 텍스트 라벨 병기 | 해당 없음 | E2E-PUBLIC-SMOKE | P0 |
+| 10 | CMP-SCR001-RECENT-MATES | 최근 동행글 미리보기 | COMPONENT | IMPLEMENT | (파생 — REQ-FUNC-030 목록 로직 재사용) | SCR-001 | `/` | - | API-MATES-READ | `src/app/_components/scr001/RecentMatePosts.tsx`(create) | 모집중 최신 3건 미리보기(제목·국가·기간·모집중 배지); 0건이면 이유+이용 방법+"동행 글 작성하기" CTA 완성형 Empty State(빈 Card 금지) | 카드 스타일은 `CMP-SCR001-DESTINATION-CARD`와 다른 리스트형으로 반복感 회피 | 연락처 비노출 | E2E-PUBLIC-SMOKE | P1 |
+| 11 | CMP-SCR001-ABOUT-TEASER | free_traveler 소개 요약 섹션 | COMPONENT | IMPLEMENT | (파생 — REQ-FUNC-057 요약 재사용) | SCR-001 | `/` | - | DATA-REPRESENTATIVE | `src/app/_components/scr001/AboutTeaser.tsx`(create) | 좌측 텍스트+50+/30+ 배지, 우측 이미지, "대표 이야기 더 보기" CTA → `/about` | 좌우 분할 레이아웃, Desktop 1열 Mobile 스택 | 해당 없음 | E2E-PUBLIC-SMOKE | P1 |
+| 12 | CMP-SCR002-HERO-STATS | 대표 Hero + 여행 지표 | COMPONENT | IMPLEMENT | REQ-FUNC-057 | SCR-002 | `/about` | - | DATA-REPRESENTATIVE | `src/app/_components/scr002/ProfileHeroStats.tsx`(create) | 대표명·50+ Trips·30+ Countries·한 줄 소개 표시, Hero 높이 제한; Lorem ipsum 금지 | Stat 카드 3개, 코랄 강조 없이 ink 텍스트 | 해당 없음 | E2E-PUBLIC-SMOKE | P0 |
+| 13 | CMP-SCR002-BIO | 소개·철학 문단 | COMPONENT | IMPLEMENT | REQ-FUNC-058 | SCR-002 | `/about` | - | DATA-REPRESENTATIVE | `src/app/_components/scr002/BioPhilosophy.tsx`(create) | 자기소개·시작 이유·철학 2~4문단, 좌측 텍스트/우측 사진; Lorem ipsum 금지 | 좌우 분할 | 해당 없음 | E2E-PUBLIC-SMOKE | P0 |
+| 14 | CMP-SCR002-TIMELINE | 여행 Timeline | COMPONENT | IMPLEMENT | REQ-FUNC-060 | SCR-002 | `/about` | - | DATA-REPRESENTATIVE | `src/app/_components/scr002/Timeline.tsx`(create) | 연도·장소·한 줄 요약 항목 6개 이상 시간순; 최소 6개 미만이면 게시 차단(데이터 게이트) | Timeline 세로/가로 레이아웃, 다른 Section과 시각적으로 구분 | 해당 없음 | E2E-PUBLIC-SMOKE | P0 |
+| 15 | CMP-SCR002-COUNTRY-CHIPS | 방문 국가 Chip(권역별) | COMPONENT | IMPLEMENT | REQ-FUNC-059 | SCR-002 | `/about` | - | DATA-REPRESENTATIVE | `src/app/_components/scr002/VisitedCountryChips.tsx`(create) | 권역 그룹 헤더 + 국가 Chip 30개 이상; 30개 미만이면 게시 차단 | Chip 기본 `surface-strong`, 코랄 미사용(선택 상태 없음) | 해당 없음 | E2E-PUBLIC-SMOKE | P0 |
+| 16 | CMP-SCR002-GALLERY | 여행 사진 Gallery | COMPONENT | IMPLEMENT(축소) | REQ-FUNC-061; REQ-NF-006 | SCR-002 | `/about` | - | DATA-REPRESENTATIVE | `src/app/_components/scr002/PhotoGallery.tsx`(create) | 서로 다른 장소 사진 8장 이상 그리드, `next/image` lazy load; 8장 미만이면 게시 차단, 내용 없는 빈 썸네일 금지 | 각 사진 실제 장소 설명 alt | 이미지는 alt·출처 텍스트만(라이선스 승인 워크플로 없음) | E2E-PUBLIC-SMOKE | P0 |
+| 17 | CMP-SCR002-RECOMMENDED-DEST-CTA | 추천 여행지 4개 + 문의/SNS + CTA | COMPONENT | IMPLEMENT | REQ-FUNC-062,063 | SCR-002 | `/about` | - | DATA-REPRESENTATIVE, DATA-DESTINATIONS | `src/app/_components/scr002/RecommendedDestinations.tsx`(create) | 추천 여행지 카드 4개(→SCR-001 상세 Drawer 연결), 문의·SNS 링크(빈 값 생략), CTA Banner("여행 준비 시작하기"/"동행 찾아보기"); 빈 링크는 렌더링 생략(빈 자리 아님) | 카드+배너 혼합으로 시각 리듬 변화 | 해당 없음 | E2E-PUBLIC-SMOKE | P0 |
+| 18 | CMP-SCR003-TAB-SHELL | 항공/숙소/동행 탭 셸 | COMPONENT | IMPLEMENT | (구조 — REQ-FUNC-011,019,027의 탭 프레임) | SCR-003 | `/travel-tools` | - | - | `src/app/_components/scr003/TabShell.tsx`(create) | 탭 3개 전환, `tab_state_isolation_required` 준수(탭 전환 시 다른 탭 값 유지·혼입 없음) | 활성 탭 코랄 언더라인, Intro 1~3문장 | 해당 없음 | E2E-TRAVEL-TOOLS | P0 |
+| 19 | CMP-SCR003-FLIGHT-TAB | 항공 탭(입력·검증·요약·외부이동) | COMPONENT | IMPLEMENT(축소) | REQ-FUNC-011~018; REQ-NF-017 | SCR-003 | `/travel-tools` | - | CMP-SCR003-TAB-SHELL | `src/app/_components/scr003/FlightTab.tsx`(create) | 국가·지역·출발일·귀국일 필수 입력, 국가 변경 시 지역 초기화, 날짜 검증(과거일·역전일 차단), 요약 표시, 비전달 고지, `noopener,noreferrer` 새 탭 이동, URL 미설정 시 오류+재시도; Tip 3개 실 콘텐츠 | 코랄 CTA "항공편 보러 가기" 1개 | 입력값 서버 DB·로그·URL query 미저장(클라이언트 상태만) | UNIT-TRAVEL-DATES, E2E-TRAVEL-TOOLS | P0 |
+| 20 | CMP-SCR003-HOTEL-TAB | 숙소 탭(입력·검증·요약·외부이동) | COMPONENT | IMPLEMENT(축소) | REQ-FUNC-019~026; REQ-NF-017 | SCR-003 | `/travel-tools` | - | CMP-SCR003-TAB-SHELL | `src/app/_components/scr003/HotelTab.tsx`(create) | 숙박 국가·지역·체크인·체크아웃 필수 입력, 지역 초기화, 날짜 검증(체크아웃≤체크인 차단), 요약, 비전달 고지, 새 탭 이동, 오류 시 입력 유지+재시도; Tip 3개 실 콘텐츠 | 코랄 CTA "숙소 보러 가기" 1개 | 입력값 서버 DB·로그·URL query 미저장 | UNIT-TRAVEL-DATES, E2E-TRAVEL-TOOLS | P0 |
+| 21 | CMP-SCR003-MATE-TAB | 동행 작성 탭(폼·연락처 탐지·안전수칙 동의) | COMPONENT | IMPLEMENT | REQ-FUNC-027,031,032,080 | SCR-003 | `/travel-tools` | - | CMP-SCR003-TAB-SHELL, API-MATES-WRITE | `src/app/_components/scr003/MateWriteForm.tsx`(create) | 미인증/미성년 시 로그인·성인확인 안내로 Form 대체, 제목·국가·지역·기간·인원·조건·스타일·설명·안전수칙 동의 입력, 날짜 검증, 정규식 기반 전화번호·이메일·메신저 ID 탐지 후 제출 차단; 연락처 패턴 발견 시 구체적 수정 안내(모호 문구 금지) | 코랄 CTA "모집글 게시하기" | 안전수칙 동의 시각·정책 버전 저장 | UNIT-CONTACT-DETECTION, E2E-TRAVEL-TOOLS, E2E-MATE-AUTH | P0 |
+| 22 | CMP-SCR004-FILTER-LIST | 동행 목록·필터·자동 마감 | COMPONENT | IMPLEMENT | REQ-FUNC-030,037; REQ-NF-004 | SCR-004 | `/mates` | - | API-MATES-READ | `src/app/_components/scr004/MateFilterList.tsx`(create) | 국가·지역·기간 겹침·연령대·성별·스타일·모집상태 필터, 차단 사용자 글 제외, 조회 시 `end_date` 경과분 CLOSED 판정(배치 없음), 최대 8개 카드 우선 노출 + 결과 요약; 0건 시 필터 초기화+이용 방법+작성 CTA 완성형 Empty State | 코랄 없이 필터 Chip 사용(선택 상태만 coral-soft) | 차단 관계 상호 비노출 | UNIT-TRAVEL-DATES(자동마감 계산), E2E-MATE-AUTH | P0 |
+| 23 | CMP-SCR004-DETAIL-PANEL | 동행 상세 패널(Desktop 분할/Mobile Drawer) | COMPONENT | IMPLEMENT | REQ-FUNC-033,069 | SCR-004 | `/mates` | - | API-MATES-READ | `src/app/_components/scr004/MateDetailPanel.tsx`(create) | 작성자·조건·설명 표시(연락처 필드 응답 자체에 미포함), 공유 버튼 | Desktop 좌우 분할/Mobile Drawer 전환 | HTML/JSON 응답에 이메일·전화번호 필드 자체를 포함하지 않음 | E2E-MATE-AUTH | P0 |
+| 24 | CMP-SCR004-APPLICATION | 참가 요청·승인·거절·Toast | COMPONENT | IMPLEMENT | REQ-FUNC-034,035,043 | SCR-004 | `/mates` | - | API-MATES-APPLICATIONS | `src/app/_components/scr004/ApplicationForm.tsx`(create) | 500자 제한 비공개 메시지 제출, 동일 글 중복 PENDING/ACCEPTED 차단, 제출 후 인앱 Toast 알림(실제 이메일 발송 없음) | 코랄 CTA "참여 신청하기" | 메시지는 작성자·요청자만 열람(RLS) | UNIT-MATE-STATE, E2E-MATE-AUTH | P0 |
+| 25 | CMP-SCR004-REPORT-BLOCK | 신고·차단 버튼/폼 | COMPONENT | IMPLEMENT | REQ-FUNC-039,040; REQ-NF-019 | SCR-004 | `/mates` | - | API-MODERATION | `src/app/_components/scr004/ReportBlockActions.tsx`(create) | 사유 코드+설명 신고 제출, 접수 ID 표시, 차단/차단 해제 | 안전 안내 CTA Banner("여행 준비 이어가기" → SCR-003) | 신고자·피신고자 상세는 관리자만 접근, 차단 후 상호 콘텐츠 미노출 | UNIT-MATE-STATE, E2E-MATE-AUTH | P0 |
+| 26 | CMP-SCR005-AUTH | 로그인/가입/비밀번호 재설정 | COMPONENT | IMPLEMENT | REQ-FUNC-066 | SCR-005 | `/account` | - | CMP-GLOBAL-AUTH-CALLBACK, DB-SCHEMA-BASE | `src/app/_components/scr005/AuthPanel.tsx`(create) | Guest 탭: Intro, 로그인/가입 Card, 로그인 후 가능 기능 목록, 보안 안내; Supabase Auth 이메일 인증·로그인·로그아웃·비번 재설정 | 코랄 CTA "로그인"/"가입하기" | 미인증 이메일은 동행 쓰기 권한 없음 | E2E-MATE-AUTH | P0 |
+| 27 | CMP-SCR005-PROFILE | 프로필·성인 확인 | COMPONENT | IMPLEMENT | REQ-FUNC-028,029 | SCR-005 | `/account` | - | API-ACCOUNT | `src/app/_components/scr005/ProfilePanel.tsx`(create) | 닉네임·연령대·스타일 필수, 성별 선택, 성인 확인 절차(배지: 완료/필요) | 배지는 `color.success`/`color.warning` + 텍스트 | 정확한 생년월일 미저장, `is_adult`+`adult_verified_at`만 저장 | E2E-MATE-AUTH | P0 |
+| 28 | CMP-SCR005-MY-ACTIVITY | 내 글·참가 요청·차단 관리·탈퇴 | COMPONENT | IMPLEMENT(축소) | REQ-FUNC-036,038,045; REQ-NF-018 | SCR-005 | `/account` | - | API-MATES-WRITE, API-MATES-APPLICATIONS, API-ACCOUNT, CMP-SCR003-MATE-TAB | `src/app/_components/scr005/MyActivityPanel.tsx`(create) | 내 글 목록(수정·마감·삭제, Form은 `CMP-SCR003-MATE-TAB` 재사용), 받은/보낸 참가 요청 승인·거절, 차단 목록 해제, 탈퇴·삭제 요청 버튼; 내 글/참가 요청/차단 목록 각각 0건 시 완성형 Empty State | 새 동행글 작성 CTA 상단 고정 | 탈퇴 시 즉시 비식별화, 30일 후 물리 삭제는 범위 밖(§3 참고) | E2E-MATE-AUTH, UNIT-MATE-STATE | P0 |
+| 29 | CMP-SCR005-ADMIN | 신고 상태 처리·외부 URL 설정 | COMPONENT | IMPLEMENT(축소) | REQ-FUNC-041,042,077 | SCR-005 | `/account` | - | API-MODERATION, API-ADMIN-SETTINGS | `src/app/_components/scr005/AdminPanel.tsx`(create) | 신고 목록(OPEN/RESOLVED/DISMISSED 필터), 상태 변경, 항공·숙소 외부 URL HTTPS 허용목록 설정; 신고 0건 시 안내 문구만(액션 불필요) | 대시보드·통계 없음(목록+설정 폼만) | HTTP·javascript·data URL 저장 차단 | E2E-MATE-AUTH, TEST-RLS-BASIC | P0 |
+| 30 | CMP-GLOBAL-HEADER-FOOTER | 전역 Header/Footer | COMPONENT | IMPLEMENT | REQ-FUNC-064,065 | - | 전체 Route | `src/app/layout.tsx` | CMP-GLOBAL-DESIGN-TOKENS | `src/app/layout.tsx`(modify) | 5개 Screen 공통 내비게이션(홈/대표소개/여행준비/동행찾기/계정)·Footer(서비스/정책/문의 3열), 320px부터 반응형 | Header 80px Desktop/64px Mobile, Footer 흰 배경 | 해당 없음 | E2E-PUBLIC-SMOKE, E2E-TRAVEL-TOOLS, E2E-MATE-AUTH | P0 |
+| 31 | CMP-GLOBAL-DESIGN-TOKENS | D-001 디자인 토큰 적용(Tailwind) | COMPONENT | IMPLEMENT | (기반 — 전 Screen 시각 일관성) | - | - | - | - | `tailwind.config.ts`(create/modify), `src/app/globals.css`(modify) | `design-reference/D-001/DESIGN.md`의 컬러·타이포·spacing·radius·shadow 토큰을 Tailwind 테마로 등록 | 코랄 `#FF6B4A` 등 승인 토큰만 사용, 미등록 임의 색상 추가 금지 | 해당 없음 | MANUAL-A11Y-CHECK | P0 |
+| 32 | CMP-GLOBAL-A11Y | 접근성 공통 컴포넌트(포커스·ARIA) | COMPONENT | IMPLEMENT | REQ-FUNC-079; REQ-NF-023 | - | 전체 Route | - | CMP-GLOBAL-DESIGN-TOKENS | `src/app/_components/a11y/FocusRing.tsx`(create) | 폼·모달·탭·알림에 올바른 HTML 시맨틱+ARIA, `:focus-visible` 2px 아웃라인, 44px 터치 영역 | 색상 단독 상태 구분 금지, 텍스트 라벨 병기 | 해당 없음 | MANUAL-A11Y-CHECK | P1 |
+| 33 | CMP-GLOBAL-SEO-META | 공개 페이지 메타데이터 | COMPONENT | IMPLEMENT | REQ-FUNC-070; REQ-NF-030 | - | 전체 Route | - | - | `src/app/page.tsx`, `src/app/about/page.tsx` 등 각 `page.tsx`(modify, `generateMetadata`) | title/description/canonical/Open Graph 페이지별 고유 값 | 해당 없음 | 해당 없음 | RELEASE-CHECK-VERCEL-SUPABASE | P1 |
+| 34 | CMP-GLOBAL-NOT-FOUND | 404 오류 화면 | COMPONENT | IMPLEMENT | REQ-FUNC-078(404 부분) | - | `*` | `src/app/not-found.tsx` | CMP-GLOBAL-HEADER-FOOTER | `src/app/not-found.tsx`(create) | 홈으로/이전 페이지 복구 행동 최소 1개 | D-001 톤 유지(별도 다크 배경 없음) | 해당 없음 | E2E-PUBLIC-SMOKE | P1 |
+| 35 | CMP-GLOBAL-ERROR-BOUNDARY | 500/권한없음/외부연결실패 오류 화면 | COMPONENT | IMPLEMENT | REQ-FUNC-078(500/권한없음/외부연결실패 부분) | - | `*` | `src/app/error.tsx` | CMP-GLOBAL-HEADER-FOOTER | `src/app/error.tsx`(create) | 재시도/홈 복구 행동 제공, 외부 사이트 연결 실패 시 전용 안내 | 동일 D-001 톤 | 오류 메시지에 내부 스택/민감정보 노출 금지 | E2E-TRAVEL-TOOLS | P1 |
+| 36 | CMP-GLOBAL-ROOT-ERROR-BOUNDARY | 전역 치명적 오류 화면 | COMPONENT | IMPLEMENT(최선노력) | REQ-FUNC-078(전역 대비) | - | `*` | `src/app/global-error.tsx` | - | `src/app/global-error.tsx`(create) | 앱 전체 렌더링 실패 시 최소 복구 UI(새로고침) | 최소 스타일(레이아웃 자체가 실패한 상황 대비) | 해당 없음 | MANUAL-PERF-CHECK | P2 |
+| 37 | CMP-GLOBAL-AUTH-CALLBACK | Supabase 이메일 인증 콜백 Route | COMPONENT | IMPLEMENT | (기술 Route — REQ-FUNC-066 지원) | - | `/auth/callback` | `src/app/auth/callback/route.ts` | DB-SCHEMA-BASE | `src/app/auth/callback/route.ts`(create) | 이메일 인증 콜백 처리 후 `/account`로 리다이렉트 | 해당 없음(비UI Route) | 콜백 코드 1회성 검증, 세션 쿠키 SameSite 설정 | E2E-MATE-AUTH | P0 |
+| 38 | DATA-DESTINATIONS | 국내·해외 여행지 정적 데이터 | DATA | IMPLEMENT | REQ-FUNC-004,007,008,009 | - | - | - | - | `src/data/destinations/domestic.ts`(create), `src/data/destinations/overseas.ts`(create) | 국내 10곳 이상, 해외 15개국 30개 도시 이상, Section 3-4 필수 필드(소개 300자+·명소 5+·추천시기·1일/3일 일정·예산·교통·음식 3+·에티켓·출처·수정일) 전량 포함, `countryCode`로 안전 데이터와 매칭; Lorem ipsum·"정보 확인 필요" 금지 | 이미지는 일반 인터넷 URL + 실제 장소 설명 alt | 해당 없음 | CI-CONTENT-VALIDATION | P0 |
+| 39 | DATA-SAFETY | 국가 안전정보 정적 데이터 | DATA | IMPLEMENT | REQ-FUNC-046~054 | - | - | - | - | `src/data/safety/countries.ts`(create) | 소개된 해외 15개국 전체, 8개 카테고리, 출처·확인일·편집자, 경보 단계·범위, 긴급연락처 필드 전량 포함 | 해당 없음 | 해당 없음 | CI-CONTENT-VALIDATION | P0 |
+| 40 | DATA-REPRESENTATIVE | free_traveler 대표 프로필 정적 데이터 | DATA | IMPLEMENT | REQ-FUNC-057~063 | - | - | - | - | `src/data/representative/profile.ts`(create) | 대표명·50+ Trips·30+ Countries 단일 소스, 소개문·철학, 방문국가 30개+, Timeline 6+, 추천 여행지 참조 4개, 이미지 8장+ | 해당 없음 | 해당 없음 | CI-CONTENT-VALIDATION | P0 |
+| 41 | DB-SCHEMA-BASE | Supabase 기본 스키마(6테이블) | DB | IMPLEMENT | (기반 — REQ-FUNC-027~045,066,077 지원) | - | - | - | - | `supabase/migrations/0001_schema.sql`(create) | `user_profiles`,`mate_posts`,`mate_applications`,`user_blocks`,`reports`,`app_settings` 정확히 6개 테이블만 생성(그 이상 금지) | 해당 없음 | 개인정보 최소 수집(정확한 생년월일 컬럼 없음) | TEST-RLS-BASIC | P0 |
+| 42 | DB-RLS-BASE | Row Level Security 정책 | DB | IMPLEMENT | REQ-FUNC-044; REQ-NF-013 | - | - | - | DB-SCHEMA-BASE | `supabase/migrations/0002_rls.sql`(create) | 본인·요청 대상 작성자·Moderator/Admin만 비공개 데이터 접근하도록 6개 테이블 전체에 RLS 정책 적용 | 해당 없음 | 권한별 부정 접근 테스트 전량 403/빈 결과 | TEST-RLS-BASIC | P0 |
+| 43 | DB-ACCESS | 데이터 접근 계층(Server Actions/쿼리 헬퍼) | DB | IMPLEMENT(최선노력) | REQ-NF-005 | - | - | - | DB-SCHEMA-BASE, DB-RLS-BASE | `src/lib/db/*.ts`(create) | 6개 테이블에 대한 타입 안전 쿼리 헬퍼, 쓰기 API 응답 목표(p95 3초) 고려 | 해당 없음 | 입력 검증·이스케이프로 저장 XSS 차단 | UNIT-MATE-STATE, TEST-RLS-BASIC | P0 |
+| 44 | DB-SEED-BASE | 개발용 시드 데이터 | DB | IMPLEMENT | (기반 — 로컬/스테이징 검증용) | - | - | - | DB-SCHEMA-BASE | `supabase/seed.sql`(create) | 6개 테이블에 대한 최소 개발용 샘플 레코드(모집중 글, 요청, 신고 등 각 상태 1건 이상) | 해당 없음 | 실 개인정보 미사용(가상 데이터만) | TEST-RLS-BASIC, E2E-MATE-AUTH | P1 |
+| 45 | API-MATES-READ | 동행 목록/상세 조회 | API | IMPLEMENT | REQ-FUNC-030,033,037; REQ-NF-004,019 | - | - | - | DB-ACCESS, DB-RLS-BASE | `src/lib/db/mates-read.ts`(create) | 필터·차단 제외·자동 마감 판정을 포함한 목록/상세 조회 | 해당 없음 | RLS로 비공개 필드 서버 측 차단 | E2E-MATE-AUTH, UNIT-MATE-STATE | P0 |
+| 46 | API-MATES-WRITE | 동행 모집글 작성·수정·마감·삭제 | API | IMPLEMENT | REQ-FUNC-031,032,038,080 | - | - | - | DB-ACCESS, DB-RLS-BASE | `src/lib/db/mates-write.ts`(create) | 안전수칙 동의 시각 저장, 연락처 패턴 서버 측 재검증, 수동 마감/수정/삭제 | 해당 없음 | 작성자 본인만 수정 가능(RLS) | UNIT-CONTACT-DETECTION, E2E-TRAVEL-TOOLS | P0 |
+| 47 | API-MATES-APPLICATIONS | 참가 요청 제출·승인·거절 | API | IMPLEMENT | REQ-FUNC-034,035,036,043 | - | - | - | DB-ACCESS, DB-RLS-BASE | `src/lib/db/mate-applications.ts`(create) | 중복 PENDING/ACCEPTED 차단(DB unique 제약), 작성자만 승인/거절 전이 허용, 상태 변경 시 알림 트리거 | 해당 없음 | 비작성자 승인 시도 403 | UNIT-MATE-STATE, E2E-MATE-AUTH | P0 |
+| 48 | API-MODERATION | 신고 접수·상태 처리·차단 | API | IMPLEMENT | REQ-FUNC-039,040,041,042; REQ-NF-019 | - | - | - | DB-ACCESS, DB-RLS-BASE | `src/lib/db/moderation.ts`(create) | 신고 접수 ID 생성, OPEN→RESOLVED/DISMISSED 전이, 차단/차단 해제 | 해당 없음 | 신고자·피신고자 상세는 관리자만 조회 가능 | UNIT-MATE-STATE, TEST-RLS-BASIC | P0 |
+| 49 | API-ACCOUNT | 프로필·성인확인·탈퇴 | API | IMPLEMENT(축소) | REQ-FUNC-028,029,045,066; REQ-NF-018 | - | - | - | DB-ACCESS, DB-RLS-BASE | `src/lib/db/account.ts`(create) | 성인확인 상태·시각 기록, 프로필 갱신, 탈퇴 시 즉시 비식별화 | 해당 없음 | 정확한 생년월일 저장 금지 | E2E-MATE-AUTH | P0 |
+| 50 | API-ADMIN-SETTINGS | 외부 URL 설정 | API | IMPLEMENT | REQ-FUNC-077 | - | - | - | DB-ACCESS, DB-RLS-BASE | `src/lib/db/admin-settings.ts`(create) | 항공·숙소 외부 URL을 HTTPS 허용목록 내에서만 저장 | 해당 없음 | HTTP·javascript·data URL 저장 거부, Admin 역할만 쓰기 허용 | TEST-RLS-BASIC, E2E-MATE-AUTH | P0 |
+| 51 | CI-CONTENT-VALIDATION | 콘텐츠 완전성·수량 검증 스크립트 | CI_OPS | IMPLEMENT(축소) | REQ-FUNC-008,046,074; REQ-NF-026,027,028 | - | - | - | DATA-DESTINATIONS, DATA-SAFETY, DATA-REPRESENTATIVE | `scripts/validate_content.py`(create) | 국내 10+·해외 15개국 30개 도시+ 수량, 해외 국가 100% 안전 페이지 커버리지, 필수 필드 완전성, 게시 전 게이트 실패 시 비영시(exit 1) | 해당 없음 | 해당 없음 | RELEASE-CHECK-VERCEL-SUPABASE | P1 |
+| 52 | CI-SECURITY-BASELINE | 보안 기본기(CSRF/XSS/env) | CI_OPS | IMPLEMENT | REQ-NF-014,015,016 | - | - | - | DB-RLS-BASE | `next.config.ts`(modify), `.env.example`(create) | SameSite 쿠키, Server Actions CSRF 기본 보호 확인, 입력 이스케이프, 비밀키는 환경변수로만 관리(클라이언트 번들 미포함) | 해당 없음 | 빌드 산출물에서 비밀키 문자열 부재 확인 | RELEASE-CHECK-VERCEL-SUPABASE | P1 |
+| 53 | CI-BUILD-LINT-GATE | TypeScript strict·ESLint 빌드 게이트 | CI_OPS | IMPLEMENT(축소) | REQ-NF-031 | - | - | - | - | `tsconfig.json`(modify, strict), `.github/workflows/*` 또는 Vercel 빌드 설정(modify) | `npm run build`, `npm run lint` 병합 전 통과 강제 | 해당 없음 | 해당 없음 | RELEASE-CHECK-VERCEL-SUPABASE | P1 |
+| 54 | MANUAL-PERF-CHECK | 성능 수동 점검(Lighthouse) | MANUAL | IMPLEMENT(최선노력) | REQ-NF-001,002,003,005,006 | - | - | - | PAGE-SCR001, PAGE-SCR002, PAGE-SCR003, PAGE-SCR004, PAGE-SCR005 | (코드 산출물 없음 — 점검 기록만) | 5개 Screen에 대해 모바일 기준 LCP/INP/CLS 수동 측정 및 기록 | 해당 없음 | 해당 없음 | 해당 Task 자체가 Release Check 입력 | P2 |
+| 55 | MANUAL-A11Y-CHECK | 접근성 수동 점검(키보드·axe) | MANUAL | IMPLEMENT(축소) | REQ-NF-024,025 | - | - | - | CMP-GLOBAL-A11Y, PAGE-SCR001, PAGE-SCR002, PAGE-SCR003, PAGE-SCR004, PAGE-SCR005 | (코드 산출물 없음 — 점검 기록만) | axe-core 스캔(핵심 페이지 serious/critical 0건 목표) + 키보드·스크린리더 수동 점검 기록 | 해당 없음 | 해당 없음 | 해당 Task 자체가 Release Check 입력 | P2 |
+| 56 | RELEASE-CHECK-VERCEL-SUPABASE | Vercel/Supabase 배포·비용 확인 | RELEASE | IMPLEMENT | REQ-NF-012,034 | - | - | - | PAGE-SCR001, PAGE-SCR002, PAGE-SCR003, PAGE-SCR004, PAGE-SCR005, DB-SCHEMA-BASE, CI-BUILD-LINT-GATE, CI-CONTENT-VALIDATION, CI-SECURITY-BASELINE | (코드 산출물 없음 — 배포 확인 기록만) | 배포 후 HTTPS 접속 확인, Vercel/Supabase 청구 콘솔에서 월 비용 목표(10만원 이하) 확인 | 해당 없음 | 해당 없음 | 해당 Task가 최종 릴리스 체크 | P2 |
+| 57 | UNIT-TRAVEL-DATES | 날짜 검증 Unit Test | TEST_UNIT | IMPLEMENT | REQ-FUNC-013,021,037 | - | - | - | CMP-SCR003-FLIGHT-TAB, CMP-SCR003-HOTEL-TAB, CMP-SCR004-FILTER-LIST | `src/app/_components/scr003/__tests__/dates.test.ts`(create) | 과거일·역전일·경계값(체크인=체크아웃) 차단, 동행글 종료일 경과 시 CLOSED 판정 로직 검증 | 해당 없음 | 해당 없음 | (Test 자체) | P1 |
+| 58 | UNIT-CONTACT-DETECTION | 연락처 탐지 Unit Test | TEST_UNIT | IMPLEMENT | REQ-FUNC-032 | - | - | - | CMP-SCR003-MATE-TAB | `src/app/_components/scr003/__tests__/contact-detection.test.ts`(create) | 전화번호·이메일·메신저 ID 패턴 기준 테스트셋 탐지율 95%+, 오탐 5% 이하 검증 | 해당 없음 | 해당 없음 | (Test 자체) | P1 |
+| 59 | UNIT-MATE-STATE | 동행 상태 전이 Unit Test | TEST_UNIT | IMPLEMENT | REQ-FUNC-035,036,041,042 | - | - | - | API-MATES-APPLICATIONS, API-MODERATION | `src/lib/db/__tests__/mate-state.test.ts`(create) | 중복 요청 차단, PENDING→ACCEPTED/REJECTED 전이 권한, 신고 OPEN→RESOLVED/DISMISSED 전이 검증 | 해당 없음 | 해당 없음 | (Test 자체) | P1 |
+| 60 | TEST-RLS-BASIC | Supabase RLS 정책 테스트 | TEST_RLS | IMPLEMENT | REQ-FUNC-044; REQ-NF-013 | - | - | - | DB-RLS-BASE | `supabase/tests/rls_basic.sql` 또는 `src/lib/db/__tests__/rls.test.ts`(create) | 역할별(Guest/Adult Member/Owner/Moderator/Admin) 비공개 데이터 접근 시나리오 전량 403/빈 결과 확인 | 해당 없음 | 해당 없음 | (Test 자체) | P0 |
+| 61 | E2E-PUBLIC-SMOKE | Playwright Chromium 스모크 — 공개 열람 흐름 | TEST_E2E | IMPLEMENT | REQ-FUNC-001~010,047~054,057~065,067~070,078,079 | - | - | - | PAGE-SCR001, PAGE-SCR002 | `e2e/public-smoke.spec.ts`(create) | ① 여행지 목록→필터→상세→안전정보 연결 ② 대표 소개 페이지 핵심 정보·홈 수치 일치 ③ 404/오류 화면 복구 버튼, Chromium 전용 스모크(다른 브라우저 프로젝트 없음) | 해당 없음 | 해당 없음 | (Test 자체) | P1 |
+| 62 | E2E-TRAVEL-TOOLS | Playwright Chromium 스모크 — 여행 준비 흐름 | TEST_E2E | IMPLEMENT | REQ-FUNC-011~032,080 | - | - | - | PAGE-SCR003 | `e2e/travel-tools.spec.ts`(create) | ④ 항공 입력→검증 오류→요약→외부이동(새 탭, query 없음) ⑤ 숙소 동일 흐름 ⑥ 동행 작성(연락처 탐지 포함), Chromium 전용 스모크 | 해당 없음 | 항공/숙소 네트워크 요청에 입력값 포함 안 됨을 검증 | (Test 자체) | P1 |
+| 63 | E2E-MATE-AUTH | Playwright Chromium 스모크 — 동행·인증·관리자 흐름 | TEST_E2E | IMPLEMENT | REQ-FUNC-027~030,033~045,066,077 | - | - | - | PAGE-SCR004, PAGE-SCR005 | `e2e/mate-auth.spec.ts`(create) | ⑦ 회원가입·성인확인→동행 작성→참가 요청→승인/거절 ⑧ 신고·차단→상호 비노출 ⑨ 관리자 신고 상태 변경·외부 URL 설정, Chromium 전용 스모크 | 해당 없음 | 비인증 사용자 쓰기 시도 차단 검증 | (Test 자체) | P1 |
+
+---## 3. NON_IMPLEMENTATION (EXCLUDED — 18건)
+
+EXCLUDED 항목은 상세 구현 Task를 만들지 않되, 본 표에서 삭제하지 않고 근거와 후속 방향을 기록한다. 근거는 `PROJECT_SCOPE.md`를 그대로 승계한다.
+
+| Requirement | 근거(PROJECT_SCOPE.md 제외 항목) | 후속 방향 |
+|---|---|---|
+| REQ-FUNC-055 | 편집자 작성·검수·게시 워크플로는 전체 콘텐츠 CMS이므로 제외 | 콘텐츠 변경은 `DATA-*` Task를 통해 개발자가 직접 코드 수정으로 반영. 향후 콘텐츠 편집 빈도가 늘면 별도 CMS 도입을 재검토 |
+| REQ-FUNC-056 | 안전정보 변경 이력 보존은 범용 감사 로그 기능이므로 제외 | git 커밋 이력으로 대체. 규제·감사 요구가 생기면 별도 이력 테이블 설계 재검토 |
+| REQ-FUNC-071 | 행동 분석 이벤트 파이프라인 미구축 | 분석 필요 시 Vercel Analytics 등 경량 도구를 별도 스코프로 재검토 |
+| REQ-FUNC-072 | 여행지 콘텐츠 CRUD(CMS) 제외 | `DATA-DESTINATIONS`의 정적 파일 직접 수정으로 대체 |
+| REQ-FUNC-073 | 미디어 업로드·라이선스 필수 입력 워크플로 제외 | 이미지는 외부 URL 직접 참조 유지. 자체 미디어 관리가 필요해지면 재검토 |
+| REQ-FUNC-075 | 안전정보 stale 현황 대시보드는 관리자 범위(신고 상태·외부 URL) 초과 | stale 경고 자체는 `CMP-SCR001-SAFETY-DRAWER`에서 공개 제공. 운영자용 대시보드는 별도 스코프 |
+| REQ-FUNC-076 | 관리자 변경·신고 처리 감사 로그 제외 | git 이력 + `reports` 테이블의 상태 컬럼으로 최소 추적. 규제 요구 시 재검토 |
+| REQ-NF-007 | Lighthouse CI 성능 게이트 미구축 | `MANUAL-PERF-CHECK`로 대체. 트래픽 증가 시 CI 게이트 도입 재검토 |
+| REQ-NF-008 | 월간 가용성 SLA 측정 체계 미구축 | Vercel/Supabase 관리형 인프라 기본 제공 범위에 의존 |
+| REQ-NF-009 | 내부 API 5xx 비율 모니터링 미구축 | 동일 — 관리형 인프라 대시보드로 대체 |
+| REQ-NF-010 | 자동 백업 RPO/RTO 목표 관리 미구축 | Supabase 기본 관리형 백업에 의존 |
+| REQ-NF-011 | 외부 링크 주간 자동 점검·알림 미구축 | 운영자 수동 점검으로 대체. 링크 실패 빈도가 늘면 자동화 재검토 |
+| REQ-NF-020 | 신고 1차 검토 24h SLA 측정 체계 미구축 | Admin이 `CMP-SCR005-ADMIN` 목록을 수동으로 주기 확인 |
+| REQ-NF-021 | 사용자 요청 속도 제한(rate limit) 인프라 미구축 | UI 중복 제출 방지 수준만 제공. 악용 사례 발생 시 재검토 |
+| REQ-NF-022 | Moderator 조치 추적성(감사 로그) 제외 | REQ-FUNC-076과 동일 방향 |
+| REQ-NF-029 | 미디어 라이선스 메타데이터 필수화 제외 | REQ-FUNC-073과 동일 방향(alt·출처 텍스트만 관리) |
+| REQ-NF-032 | 구조화 로그(request_id 등) 미구축 | Vercel 기본 로그만 사용 |
+| REQ-NF-033 | 핵심 오류 자동 알림 미구축 | 수동 모니터링으로 대체. 장애 빈도가 늘면 알림 도구 재검토 |
+
+---
+
+## 4. Requirement Coverage (114/114 확인)
+
+전체 REQ-FUNC-001~080, REQ-NF-001~034가 정확히 1회씩 아래에 등장한다. IMPLEMENT 계열은 구현 Task(들)와 Verify Task를 함께 표기하고, EXCLUDED는 `§3 NON_IMPLEMENTATION 참조`로 표기한다.
+
+### REQ-FUNC
+
+| Requirement | Status | 구현 Task | Verify |
+|---|---|---|---|
+| REQ-FUNC-001 | IMPLEMENT | CMP-SCR001-SEARCH-FILTER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-002 | IMPLEMENT | CMP-SCR001-SEARCH-FILTER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-003 | IMPLEMENT | CMP-SCR001-SEARCH-FILTER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-004 | IMPLEMENT | CMP-SCR001-DEST-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-005 | IMPLEMENT | CMP-SCR001-SEARCH-FILTER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-006 | IMPLEMENT | CMP-SCR001-DEST-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-007 | IMPLEMENT(축소) | CMP-SCR001-DESTINATION-CARD | CI-CONTENT-VALIDATION |
+| REQ-FUNC-008 | IMPLEMENT | CI-CONTENT-VALIDATION | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-FUNC-009 | IMPLEMENT | CMP-SCR001-DEST-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-010 | IMPLEMENT | CMP-SCR001-SEARCH-FILTER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-011 | IMPLEMENT | CMP-SCR003-FLIGHT-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-012 | IMPLEMENT | CMP-SCR003-FLIGHT-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-013 | IMPLEMENT | CMP-SCR003-FLIGHT-TAB | UNIT-TRAVEL-DATES |
+| REQ-FUNC-014 | IMPLEMENT | CMP-SCR003-FLIGHT-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-015 | IMPLEMENT | CMP-SCR003-FLIGHT-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-016 | IMPLEMENT | CMP-SCR003-FLIGHT-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-017 | IMPLEMENT | CMP-SCR003-FLIGHT-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-018 | IMPLEMENT(축소) | CMP-SCR003-FLIGHT-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-019 | IMPLEMENT | CMP-SCR003-HOTEL-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-020 | IMPLEMENT | CMP-SCR003-HOTEL-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-021 | IMPLEMENT | CMP-SCR003-HOTEL-TAB | UNIT-TRAVEL-DATES |
+| REQ-FUNC-022 | IMPLEMENT | CMP-SCR003-HOTEL-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-023 | IMPLEMENT | CMP-SCR003-HOTEL-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-024 | IMPLEMENT | CMP-SCR003-HOTEL-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-025 | IMPLEMENT | CMP-SCR003-HOTEL-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-026 | IMPLEMENT(축소) | CMP-SCR003-HOTEL-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-027 | IMPLEMENT | CMP-SCR003-MATE-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-028 | IMPLEMENT | CMP-SCR005-PROFILE | E2E-MATE-AUTH |
+| REQ-FUNC-029 | IMPLEMENT | CMP-SCR005-PROFILE | E2E-MATE-AUTH |
+| REQ-FUNC-030 | IMPLEMENT | CMP-SCR004-FILTER-LIST | E2E-MATE-AUTH |
+| REQ-FUNC-031 | IMPLEMENT | CMP-SCR003-MATE-TAB | E2E-TRAVEL-TOOLS |
+| REQ-FUNC-032 | IMPLEMENT | CMP-SCR003-MATE-TAB | UNIT-CONTACT-DETECTION |
+| REQ-FUNC-033 | IMPLEMENT | CMP-SCR004-DETAIL-PANEL | E2E-MATE-AUTH |
+| REQ-FUNC-034 | IMPLEMENT | CMP-SCR004-APPLICATION | E2E-MATE-AUTH |
+| REQ-FUNC-035 | IMPLEMENT | CMP-SCR004-APPLICATION | UNIT-MATE-STATE |
+| REQ-FUNC-036 | IMPLEMENT | CMP-SCR005-MY-ACTIVITY | UNIT-MATE-STATE |
+| REQ-FUNC-037 | IMPLEMENT | CMP-SCR004-FILTER-LIST | UNIT-TRAVEL-DATES |
+| REQ-FUNC-038 | IMPLEMENT | CMP-SCR005-MY-ACTIVITY | E2E-MATE-AUTH |
+| REQ-FUNC-039 | IMPLEMENT | CMP-SCR004-REPORT-BLOCK | E2E-MATE-AUTH |
+| REQ-FUNC-040 | IMPLEMENT | CMP-SCR004-REPORT-BLOCK | E2E-MATE-AUTH |
+| REQ-FUNC-041 | IMPLEMENT(축소) | CMP-SCR005-ADMIN | E2E-MATE-AUTH |
+| REQ-FUNC-042 | IMPLEMENT(축소) | CMP-SCR005-ADMIN | UNIT-MATE-STATE |
+| REQ-FUNC-043 | IMPLEMENT | CMP-SCR004-APPLICATION | E2E-MATE-AUTH |
+| REQ-FUNC-044 | IMPLEMENT | DB-RLS-BASE | TEST-RLS-BASIC |
+| REQ-FUNC-045 | IMPLEMENT(축소) | CMP-SCR005-MY-ACTIVITY | E2E-MATE-AUTH |
+| REQ-FUNC-046 | IMPLEMENT | CI-CONTENT-VALIDATION | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-FUNC-047 | IMPLEMENT | CMP-SCR001-SAFETY-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-048 | IMPLEMENT | CMP-SCR001-SAFETY-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-049 | IMPLEMENT | CMP-SCR001-SAFETY-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-050 | IMPLEMENT | CMP-SCR001-SAFETY-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-051 | IMPLEMENT | CMP-SCR001-SAFETY-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-052 | IMPLEMENT | CMP-SCR001-SAFETY-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-053 | IMPLEMENT | CMP-SCR001-SAFETY-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-054 | IMPLEMENT | CMP-SCR001-SAFETY-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-055 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-FUNC-056 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-FUNC-057 | IMPLEMENT | CMP-SCR002-HERO-STATS | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-058 | IMPLEMENT | CMP-SCR002-BIO | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-059 | IMPLEMENT | CMP-SCR002-COUNTRY-CHIPS | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-060 | IMPLEMENT | CMP-SCR002-TIMELINE | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-061 | IMPLEMENT(축소) | CMP-SCR002-GALLERY | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-062 | IMPLEMENT | CMP-SCR002-RECOMMENDED-DEST-CTA | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-063 | IMPLEMENT | CMP-SCR002-RECOMMENDED-DEST-CTA | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-064 | IMPLEMENT | CMP-GLOBAL-HEADER-FOOTER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-065 | IMPLEMENT | CMP-GLOBAL-HEADER-FOOTER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-066 | IMPLEMENT | CMP-SCR005-AUTH | E2E-MATE-AUTH |
+| REQ-FUNC-067 | IMPLEMENT | CMP-SCR001-SEARCH-FILTER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-068 | IMPLEMENT | CMP-SCR001-DESTINATION-CARD | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-069 | IMPLEMENT | CMP-SCR001-DEST-DRAWER | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-070 | IMPLEMENT | CMP-GLOBAL-SEO-META | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-FUNC-071 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-FUNC-072 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-FUNC-073 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-FUNC-074 | IMPLEMENT(축소) | CI-CONTENT-VALIDATION | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-FUNC-075 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-FUNC-076 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-FUNC-077 | IMPLEMENT | CMP-SCR005-ADMIN | E2E-MATE-AUTH |
+| REQ-FUNC-078 | IMPLEMENT | CMP-GLOBAL-NOT-FOUND, CMP-GLOBAL-ERROR-BOUNDARY, CMP-GLOBAL-ROOT-ERROR-BOUNDARY | E2E-PUBLIC-SMOKE |
+| REQ-FUNC-079 | IMPLEMENT | CMP-GLOBAL-A11Y | MANUAL-A11Y-CHECK |
+| REQ-FUNC-080 | IMPLEMENT | CMP-SCR003-MATE-TAB | E2E-TRAVEL-TOOLS |
+
+### REQ-NF
+
+| Requirement | Status | 구현 Task | Verify |
+|---|---|---|---|
+| REQ-NF-001 | IMPLEMENT(최선노력) | MANUAL-PERF-CHECK | - |
+| REQ-NF-002 | IMPLEMENT(최선노력) | MANUAL-PERF-CHECK | - |
+| REQ-NF-003 | IMPLEMENT(최선노력) | MANUAL-PERF-CHECK | - |
+| REQ-NF-004 | IMPLEMENT | CMP-SCR001-SEARCH-FILTER, CMP-SCR004-FILTER-LIST | E2E-PUBLIC-SMOKE, E2E-MATE-AUTH |
+| REQ-NF-005 | IMPLEMENT(최선노력) | DB-ACCESS | - |
+| REQ-NF-006 | IMPLEMENT | CMP-SCR001-DESTINATION-CARD | MANUAL-PERF-CHECK |
+| REQ-NF-007 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-008 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-009 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-010 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-011 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-012 | IMPLEMENT | RELEASE-CHECK-VERCEL-SUPABASE | - |
+| REQ-NF-013 | IMPLEMENT | DB-RLS-BASE | TEST-RLS-BASIC |
+| REQ-NF-014 | IMPLEMENT | CI-SECURITY-BASELINE | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-NF-015 | IMPLEMENT | CI-SECURITY-BASELINE | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-NF-016 | IMPLEMENT | CI-SECURITY-BASELINE | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-NF-017 | IMPLEMENT | CMP-SCR003-FLIGHT-TAB, CMP-SCR003-HOTEL-TAB | E2E-TRAVEL-TOOLS |
+| REQ-NF-018 | IMPLEMENT(축소) | CMP-SCR005-MY-ACTIVITY | E2E-MATE-AUTH |
+| REQ-NF-019 | IMPLEMENT | CMP-SCR004-REPORT-BLOCK | E2E-MATE-AUTH |
+| REQ-NF-020 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-021 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-022 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-023 | IMPLEMENT(목표) | CMP-GLOBAL-A11Y | MANUAL-A11Y-CHECK |
+| REQ-NF-024 | IMPLEMENT(축소) | MANUAL-A11Y-CHECK | - |
+| REQ-NF-025 | IMPLEMENT(축소) | MANUAL-A11Y-CHECK | - |
+| REQ-NF-026 | IMPLEMENT | CI-CONTENT-VALIDATION | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-NF-027 | IMPLEMENT | CI-CONTENT-VALIDATION | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-NF-028 | IMPLEMENT(축소) | CI-CONTENT-VALIDATION | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-NF-029 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-030 | IMPLEMENT | CMP-GLOBAL-SEO-META | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-NF-031 | IMPLEMENT(축소) | CI-BUILD-LINT-GATE | RELEASE-CHECK-VERCEL-SUPABASE |
+| REQ-NF-032 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-033 | EXCLUDED | §3 NON_IMPLEMENTATION 참조 | - |
+| REQ-NF-034 | IMPLEMENT | RELEASE-CHECK-VERCEL-SUPABASE | - |
+
+---
+
+## 5. 완료 조건 자체 점검
+
+- [x] REQ-FUNC-001~080, REQ-NF-001~034 총 114개가 §4에 정확히 1회씩 등장(누락 0건, 아래 자동 집계로 재확인).
+- [x] IMPLEMENT 계열 96건 모두 구현 Task와 Verify(Test/Manual/Release) Task에 연결됨.
+- [x] EXCLUDED 18건 모두 §3 NON_IMPLEMENTATION에 근거·후속 방향과 함께 기록(삭제 없음).
+- [x] SCR-001~005마다 Page Owner Task가 정확히 1개(`PAGE-SCR001~005`)이며, 각 `page_entry`를 Expected Files에 포함.
+- [x] Page Owner는 모두 같은 Screen의 Component/Data/API Task에 의존.
+- [x] SCR-003은 항공/숙소/동행 작성이 각각 독립된 Component Task로 분리됨.
+- [x] SCR-004는 목록·필터/상세/참가/신고·차단이 각각 독립된 Component Task로 분리됨.
+- [x] SCR-005는 Auth/Profile/My Activity/Admin이 각각 독립된 Component Task로 분리됨.
+- [x] DB Schema/RLS/Access/Seed가 별도 Task로 분리됨(`DB-SCHEMA-BASE`,`DB-RLS-BASE`,`DB-ACCESS`,`DB-SEED-BASE`).
+- [x] 날짜 검증·연락처 탐지·상태 전이 각각 Unit Test Task 보유(`UNIT-TRAVEL-DATES`,`UNIT-CONTACT-DETECTION`,`UNIT-MATE-STATE`).
+- [x] Playwright는 Chromium 스모크 3개 Task로만 구성(`E2E-PUBLIC-SMOKE`,`E2E-TRAVEL-TOOLS`,`E2E-MATE-AUTH`).
+- [x] CI·Vercel/Supabase 확인 Task 존재(`CI-BUILD-LINT-GATE`,`RELEASE-CHECK-VERCEL-SUPABASE`).
+- [x] 어떤 Task도 2개 이상의 Page Entry를 동시에 소유하지 않음(전역 오류 Route는 not-found/error/global-error로 각각 별도 Task로 분리).
+- [x] 구현 코드, Branch, Commit, Issue를 생성하지 않음 — 본 문서(`TASKS/00_TASK_LIST.md`)만 산출.

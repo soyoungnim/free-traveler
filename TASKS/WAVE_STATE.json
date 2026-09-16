@@ -1,0 +1,168 @@
+{
+  "schema_version": "traveler-wave-state-v1",
+  "generated_at": "2026-09-16T12:36:20+00:00",
+  "waves": [
+    {
+      "wave_id": "W01",
+      "title": "Airbnb 스타일 공통 UI, 정적 데이터, Layout / Scaffold, 문서, Harness 확인",
+      "task_ids": [
+        "CMP-GLOBAL-DESIGN-TOKENS",
+        "CMP-GLOBAL-A11Y",
+        "CMP-GLOBAL-HEADER-FOOTER",
+        "CMP-GLOBAL-ERROR-BOUNDARY",
+        "CMP-GLOBAL-NOT-FOUND",
+        "CMP-GLOBAL-ROOT-ERROR-BOUNDARY",
+        "DATA-DESTINATIONS"
+      ],
+      "status": "pending",
+      "checkpoint_required": false,
+      "checkpoint_result": null
+    },
+    {
+      "wave_id": "W02",
+      "title": "Airbnb 스타일 공통 UI, 정적 데이터, Layout / Supabase Auth, 6개 Table, 기본 RLS(+API 데이터 접근 계층)",
+      "task_ids": [
+        "DATA-REPRESENTATIVE",
+        "DATA-SAFETY",
+        "DB-SCHEMA-BASE",
+        "CMP-GLOBAL-AUTH-CALLBACK",
+        "DB-RLS-BASE",
+        "DB-ACCESS",
+        "API-ACCOUNT"
+      ],
+      "status": "pending",
+      "checkpoint_required": false,
+      "checkpoint_result": null
+    },
+    {
+      "wave_id": "W03",
+      "title": "Supabase Auth, 6개 Table, 기본 RLS(+API 데이터 접근 계층)",
+      "task_ids": [
+        "API-ADMIN-SETTINGS",
+        "API-MATES-APPLICATIONS",
+        "API-MATES-READ",
+        "API-MATES-WRITE",
+        "API-MODERATION",
+        "DB-SEED-BASE"
+      ],
+      "status": "pending",
+      "checkpoint_required": false,
+      "checkpoint_result": null
+    },
+    {
+      "wave_id": "W04",
+      "title": "SCR-001 메인 Component와 Page Owner",
+      "task_ids": [
+        "CMP-SCR001-ABOUT-TEASER",
+        "CMP-SCR001-DESTINATION-CARD",
+        "CMP-SCR001-RECENT-MATES",
+        "CMP-SCR001-SAFETY-DRAWER",
+        "CMP-SCR001-DEST-DRAWER",
+        "CMP-SCR001-SEARCH-FILTER",
+        "PAGE-SCR001"
+      ],
+      "status": "pending",
+      "checkpoint_required": true,
+      "checkpoint_result": null
+    },
+    {
+      "wave_id": "W05",
+      "title": "SCR-002 대표 소개 Component와 Page Owner",
+      "task_ids": [
+        "CMP-SCR002-BIO",
+        "CMP-SCR002-COUNTRY-CHIPS",
+        "CMP-SCR002-GALLERY",
+        "CMP-SCR002-HERO-STATS",
+        "CMP-SCR002-RECOMMENDED-DEST-CTA",
+        "CMP-SCR002-TIMELINE",
+        "PAGE-SCR002"
+      ],
+      "status": "pending",
+      "checkpoint_required": true,
+      "checkpoint_result": null
+    },
+    {
+      "wave_id": "W06",
+      "title": "SCR-003 여행 입력·외부 이동·동행글 입력 Component와 Page Owner",
+      "task_ids": [
+        "CMP-SCR003-TAB-SHELL",
+        "CMP-SCR003-FLIGHT-TAB",
+        "CMP-SCR003-HOTEL-TAB",
+        "CMP-SCR003-MATE-TAB",
+        "PAGE-SCR003"
+      ],
+      "status": "pending",
+      "checkpoint_required": true,
+      "checkpoint_result": null
+    },
+    {
+      "wave_id": "W07",
+      "title": "SCR-004 동행 목록·상세·신청 Component와 Page Owner",
+      "task_ids": [
+        "CMP-SCR004-APPLICATION",
+        "CMP-SCR004-DETAIL-PANEL",
+        "CMP-SCR004-FILTER-LIST",
+        "CMP-SCR004-REPORT-BLOCK",
+        "PAGE-SCR004"
+      ],
+      "status": "pending",
+      "checkpoint_required": true,
+      "checkpoint_result": null
+    },
+    {
+      "wave_id": "W08",
+      "title": "SCR-005 계정·내 활동·간단 관리자 Component와 Page Owner",
+      "task_ids": [
+        "CMP-SCR005-ADMIN",
+        "CMP-SCR005-AUTH",
+        "CMP-SCR005-MY-ACTIVITY",
+        "CMP-SCR005-PROFILE",
+        "PAGE-SCR005"
+      ],
+      "status": "pending",
+      "checkpoint_required": true,
+      "checkpoint_result": null
+    },
+    {
+      "wave_id": "W09",
+      "title": "Unit·Playwright·접근성·CI",
+      "task_ids": [
+        "CI-BUILD-LINT-GATE",
+        "CI-CONTENT-VALIDATION",
+        "CI-SECURITY-BASELINE",
+        "CMP-GLOBAL-SEO-META",
+        "E2E-MATE-AUTH",
+        "E2E-PUBLIC-SMOKE",
+        "E2E-TRAVEL-TOOLS"
+      ],
+      "status": "pending",
+      "checkpoint_required": false,
+      "checkpoint_result": null
+    },
+    {
+      "wave_id": "W10",
+      "title": "Unit·Playwright·접근성·CI",
+      "task_ids": [
+        "MANUAL-A11Y-CHECK",
+        "MANUAL-PERF-CHECK",
+        "TEST-RLS-BASIC",
+        "UNIT-CONTACT-DETECTION",
+        "UNIT-MATE-STATE",
+        "UNIT-TRAVEL-DATES"
+      ],
+      "status": "pending",
+      "checkpoint_required": false,
+      "checkpoint_result": null
+    },
+    {
+      "wave_id": "W11",
+      "title": "Vercel Preview와 Release 확인",
+      "task_ids": [
+        "RELEASE-CHECK-VERCEL-SUPABASE"
+      ],
+      "status": "pending",
+      "checkpoint_required": false,
+      "checkpoint_result": null
+    }
+  ]
+}

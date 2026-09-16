@@ -1,0 +1,239 @@
+{
+  "schema_version": "traveler-screen-route-v1",
+  "framework": "nextjs-app-router",
+  "source_documents": [
+    "docs/03_UI_COVERAGE_ANALYSIS.md",
+    "docs/04_UIUX_PLAN.md",
+    "docs/STITCH_VALIDATION_REPORT.md",
+    "design-reference/D-001/DESIGN.md",
+    "design-reference/UI_CONTRACT.md"
+  ],
+  "screen_count": 5,
+  "category_summary": {
+    "core_count": 4,
+    "supplementary_count": 1
+  },
+  "screens": [
+    {
+      "screen_id": "SCR-001",
+      "route": "/",
+      "page_entry": "src/app/page.tsx",
+      "category": "core",
+      "page_owner_task_required": true,
+      "preview_required": true,
+      "starter_template_forbidden": true,
+      "mobile_variant_approved": true,
+      "section_order": [
+        "search_hero",
+        "domestic_destination_card_grid",
+        "overseas_destination_card_grid",
+        "travel_theme_chip_list",
+        "country_safety_card_grid",
+        "recent_mate_posts_or_empty_state",
+        "free_traveler_intro_split"
+      ],
+      "min_content_counts": {
+        "domestic_destination_cards": 6,
+        "overseas_destination_cards": 6,
+        "travel_theme_chips": 6,
+        "country_safety_cards": 6,
+        "recent_mate_posts": 3
+      },
+      "forbidden_features": [
+        "airbnb_trademark_elements",
+        "purchase_booking_payment_ui",
+        "star_ratings_or_trust_score_badges",
+        "advertising",
+        "realtime_flight_or_hotel_pricing",
+        "placeholder_copy_lorem_ipsum_or_preparing_or_info_check_needed",
+        "starter_template_leftover_content"
+      ]
+    },
+    {
+      "screen_id": "SCR-002",
+      "route": "/about",
+      "page_entry": "src/app/about/page.tsx",
+      "category": "supplementary",
+      "page_owner_task_required": true,
+      "preview_required": true,
+      "starter_template_forbidden": false,
+      "mobile_variant_approved": false,
+      "section_order": [
+        "profile_hero",
+        "trip_country_stat_cards",
+        "bio_and_philosophy_split",
+        "travel_timeline",
+        "visited_country_chip_list_by_region",
+        "photo_gallery",
+        "memorable_destinations_with_cta"
+      ],
+      "min_content_counts": {
+        "timeline_entries": 6,
+        "visited_countries": 30,
+        "gallery_photos": 8,
+        "memorable_destination_cards": 4
+      },
+      "forbidden_features": [
+        "airbnb_trademark_elements",
+        "purchase_booking_payment_ui",
+        "identity_verification_or_government_id_guarantee_claims",
+        "complex_statistics_dashboard",
+        "media_license_approval_workflow_ui"
+      ]
+    },
+    {
+      "screen_id": "SCR-003",
+      "route": "/travel-tools",
+      "page_entry": "src/app/travel-tools/page.tsx",
+      "category": "core",
+      "page_owner_task_required": true,
+      "preview_required": true,
+      "starter_template_forbidden": false,
+      "mobile_variant_approved": true,
+      "section_order": [
+        "intro",
+        "tabs_flight_hotel_mate",
+        "trip_condition_form",
+        "summary_and_outbound_action_card",
+        "no_transfer_notice_and_tips",
+        "mate_post_form_or_login_notice"
+      ],
+      "min_content_counts": {
+        "tabs": 3,
+        "search_tips": 3
+      },
+      "tab_state_isolation_required": true,
+      "forbidden_features": [
+        "purchase_booking_payment_ui",
+        "server_side_storage_of_trip_input_values",
+        "outbound_url_query_param_injection",
+        "realtime_flight_or_hotel_pricing_or_inventory",
+        "airbnb_trademark_elements"
+      ]
+    },
+    {
+      "screen_id": "SCR-004",
+      "route": "/mates",
+      "page_entry": "src/app/mates/page.tsx",
+      "category": "core",
+      "page_owner_task_required": true,
+      "preview_required": true,
+      "starter_template_forbidden": false,
+      "mobile_variant_approved": false,
+      "section_order": [
+        "intro_with_write_cta",
+        "filter_and_result_summary",
+        "mate_post_card_list",
+        "list_detail_split_or_mobile_drawer",
+        "application_steps_guide",
+        "safety_report_block_notice_with_cta"
+      ],
+      "min_content_counts": {
+        "mate_post_cards_max_priority": 8,
+        "application_steps": 3
+      },
+      "forbidden_features": [
+        "public_contact_info_exposure",
+        "realtime_chat_video_or_location_sharing",
+        "identity_verification_or_government_id_guarantee_claims",
+        "star_ratings_or_reviews",
+        "airbnb_trademark_elements",
+        "purchase_booking_payment_ui"
+      ]
+    },
+    {
+      "screen_id": "SCR-005",
+      "route": "/account",
+      "page_entry": "src/app/account/page.tsx",
+      "category": "core",
+      "page_owner_task_required": true,
+      "preview_required": true,
+      "starter_template_forbidden": false,
+      "mobile_variant_approved": false,
+      "role_scoped_tabs": {
+        "guest": ["intro", "login_signup_card", "post_login_feature_list", "security_notice"],
+        "adult_member": ["profile_summary_and_form", "my_activity_posts_applications_blocks_write_cta"],
+        "moderator_admin": ["admin_intro", "report_status_handling", "outbound_url_settings"]
+      },
+      "tabs_render_exclusively_by_role": true,
+      "forbidden_features": [
+        "complex_statistics_dashboard",
+        "general_purpose_audit_log_ui",
+        "content_cms_crud_ui",
+        "media_upload_and_license_approval_ui",
+        "airbnb_trademark_elements",
+        "purchase_booking_payment_ui"
+      ]
+    }
+  ],
+  "technical_routes": [
+    {
+      "type": "auth_callback",
+      "route": "/auth/callback",
+      "file": "src/app/auth/callback/route.ts",
+      "counted_as_screen": false
+    },
+    {
+      "type": "api_route",
+      "route": "/api/mates",
+      "file": "src/app/api/mates/route.ts",
+      "counted_as_screen": false
+    },
+    {
+      "type": "api_route",
+      "route": "/api/mates/[id]/applications",
+      "file": "src/app/api/mates/[id]/applications/route.ts",
+      "counted_as_screen": false
+    },
+    {
+      "type": "api_route",
+      "route": "/api/admin/reports",
+      "file": "src/app/api/admin/reports/route.ts",
+      "counted_as_screen": false
+    },
+    {
+      "type": "api_route",
+      "route": "/api/admin/settings/outbound",
+      "file": "src/app/api/admin/settings/outbound/route.ts",
+      "counted_as_screen": false
+    },
+    {
+      "type": "not_found",
+      "route": "*",
+      "file": "src/app/not-found.tsx",
+      "counted_as_screen": false
+    },
+    {
+      "type": "error_boundary",
+      "route": "*",
+      "file": "src/app/error.tsx",
+      "counted_as_screen": false
+    },
+    {
+      "type": "error_boundary",
+      "route": "*",
+      "file": "src/app/global-error.tsx",
+      "counted_as_screen": false
+    }
+  ],
+  "required_navigation": [
+    { "from": "SCR-001", "to": "SCR-003", "trigger": "hero_cta_or_destination_drawer_prepare_trip" },
+    { "from": "SCR-001", "to": "SCR-004", "trigger": "recent_mate_posts_section_cta" },
+    { "from": "SCR-001", "to": "SCR-002", "trigger": "free_traveler_intro_section_cta" },
+    { "from": "SCR-002", "to": "SCR-001", "trigger": "memorable_destination_card_click" },
+    { "from": "SCR-002", "to": "SCR-003", "trigger": "closing_cta_banner" },
+    { "from": "SCR-002", "to": "SCR-004", "trigger": "closing_cta_banner" },
+    { "from": "SCR-003", "to": "SCR-004", "trigger": "mate_post_submission_complete" },
+    { "from": "SCR-003", "to": "SCR-005", "trigger": "mate_tab_unauthenticated_login_prompt" },
+    { "from": "SCR-004", "to": "SCR-003", "trigger": "write_post_cta_or_safety_section_cta" },
+    { "from": "SCR-004", "to": "SCR-005", "trigger": "unauthenticated_action_attempt" },
+    { "from": "SCR-005", "to": "SCR-003", "trigger": "new_mate_post_cta" },
+    { "from": "SCR-005", "to": "SCR-004", "trigger": "application_empty_state_cta" }
+  ],
+  "completion_conditions": {
+    "route_uniqueness": true,
+    "page_entry_uniqueness": true,
+    "screen_count_equals_5": true,
+    "core_and_supplementary_distinction_present": true
+  }
+}
