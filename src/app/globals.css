@@ -1,26 +1,75 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Free Traveler — D-001 디자인 토큰 (design-reference/D-001/DESIGN.md 정본).
+ * 모든 색상·타이포·spacing·radius·shadow는 이 @theme 블록의 토큰만 사용한다.
+ * 여기 없는 임의 색상·서체·크기를 코드에서 새로 만들지 않는다 — 필요하면
+ * 먼저 D-001 문서와 이 블록을 함께 갱신한다.
+ */
+@theme {
+  /* Color */
+  --color-coral: #ff6b4a;
+  --color-coral-active: #e8532e;
+  --color-coral-disabled: #ffd9cc;
+  --color-coral-soft: #fff1ec;
+  --color-canvas: #ffffff;
+  --color-surface-soft: #f7f6f5;
+  --color-surface-strong: #efedeb;
+  --color-ink: #262626;
+  --color-body: #4b4b4b;
+  --color-muted: #767676;
+  --color-hairline: #e2e2e2;
+  --color-error: #c1352b;
+  --color-warning: #b45309;
+  --color-advisory: #8c1d18;
+  --color-safety-info: #2a6f97;
+  --color-success: #1e7f4d;
+  --color-on-coral: #ffffff;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Typography — 폰트 스택은 Inter + 한글 시스템 폰트 폴백(파일 번들 없음) */
+  --font-sans:
+    "Inter", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --text-display-lg: 32px;
+  --text-display-lg--line-height: 40px;
+  --text-display-md: 24px;
+  --text-display-md--line-height: 32px;
+  --text-title-lg: 20px;
+  --text-title-lg--line-height: 28px;
+  --text-title-md: 18px;
+  --text-title-md--line-height: 26px;
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 26px;
+  --text-body-md: 15px;
+  --text-body-md--line-height: 24px;
+  --text-caption: 13px;
+  --text-caption--line-height: 20px;
+  --text-button: 16px;
+  --text-button--line-height: 24px;
+
+  /* Spacing — section-desktop/mobile은 64–96px, 40–64px 범위의 하한값이다.
+     상한이 필요한 자리는 컴포넌트에서 반응형 유틸리티로 보완한다. */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-base: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-section-desktop: 64px;
+  --spacing-section-mobile: 40px;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Shadow — 카드/Drawer/Modal/Dropdown 호버·플로팅 상태에만 사용하는 단일 계층 */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
 }

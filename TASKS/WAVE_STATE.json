@@ -14,9 +14,39 @@
         "CMP-GLOBAL-ROOT-ERROR-BOUNDARY",
         "DATA-DESTINATIONS"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "checkpoint_required": false,
-      "checkpoint_result": null
+      "checkpoint_result": null,
+      "tasks": [
+        {
+          "task_id": "CMP-GLOBAL-DESIGN-TOKENS",
+          "status": "completed"
+        },
+        {
+          "task_id": "CMP-GLOBAL-A11Y",
+          "status": "completed"
+        },
+        {
+          "task_id": "CMP-GLOBAL-HEADER-FOOTER",
+          "status": "pending"
+        },
+        {
+          "task_id": "CMP-GLOBAL-ERROR-BOUNDARY",
+          "status": "pending"
+        },
+        {
+          "task_id": "CMP-GLOBAL-NOT-FOUND",
+          "status": "pending"
+        },
+        {
+          "task_id": "CMP-GLOBAL-ROOT-ERROR-BOUNDARY",
+          "status": "pending"
+        },
+        {
+          "task_id": "DATA-DESTINATIONS",
+          "status": "pending"
+        }
+      ]
     },
     {
       "wave_id": "W02",

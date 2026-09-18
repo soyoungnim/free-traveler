@@ -6,7 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "format:check": "prettier --no-error-on-unmatched-pattern --check \"src/**/*.{ts,tsx,js,jsx,css}\" \"tests/**/*.{ts,tsx}\" \"./*.{js,cjs,mjs,ts,tsx,json}\" \".github/**/*.{yml,yaml}\"",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:public": "playwright test --project=chromium tests/e2e/public-smoke.spec.ts",
+    "validate:inputs": "python3 scripts/validate_inputs.py",
+    "task:contract": "python3 scripts/audit_tasks.py",
+    "wave:contract": "python3 scripts/build_waves.py",
+    "screen:contract": "python3 scripts/check_screen_contract.py",
+    "validate": "npm run --silent validate:inputs && npm run --silent task:contract && npm run --silent wave:contract && npm run --silent screen:contract",
+    "ci": "npm run --silent lint && npm run --silent typecheck && npm run --silent test:unit && npm run --silent task:contract && npm run --silent screen:contract -- --mode=ci && npm run --silent build",
+    "release:check": "npm run --silent ci && python3 scripts/run_release_smoke.py"
   },
   "dependencies": {
     "next": "16.3.4",
@@ -14,13 +26,16 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "prettier": "^3.9.7",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   }
 }
