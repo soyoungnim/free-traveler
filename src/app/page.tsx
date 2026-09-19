@@ -29,6 +29,16 @@ function countryCodeToFlag(code: string): string {
   return [...code.toUpperCase()].map((c) => 127397 + c.charCodeAt(0)).map((c) => String.fromCodePoint(c)).join("");
 }
 
+function getAdvisoryStatus(advisoryLevel: string): { label: string; textColor: string } {
+  if (/여행금지|철수권고|여행자제|특별여행주의보/.test(advisoryLevel)) {
+    return { label: "위험", textColor: "text-advisory" };
+  }
+  if (/여행유의|주의/.test(advisoryLevel)) {
+    return { label: "주의", textColor: "text-warning" };
+  }
+  return { label: "안전", textColor: "text-safety-info" };
+}
+
 /**
  * PAGE-SCR001 조립 중 발견한 실제 제약: DestinationCard/SafetyDrawer 등은
  * onSelect 같은 콜백 props를 받는 Client Component라 이들을 잇는 상태는
@@ -271,22 +281,35 @@ function HomeContent() {
           </p>
         </div>
         <div className={GRID_CLASS}>
-          {featuredCountries.map((country) => (
-            <button
-              key={country.countryCode}
-              type="button"
-              onClick={() => setSelectedSafetyCountry(country.countryCode)}
-              className="flex flex-col gap-2 rounded-md border border-hairline p-4 text-left"
-            >
-              <span className="flex items-center gap-2 text-title-md font-semibold">
-                <span>{countryCodeToFlag(country.countryCode)}</span>
-                {country.countryName}
-              </span>
-              <span className="rounded-full bg-safety-info px-3 py-1 text-caption font-medium text-on-coral">
-                {country.advisoryLevel}
-              </span>
-            </button>
-          ))}
+          {featuredCountries.map((country) => {
+            const advisoryStatus = getAdvisoryStatus(country.advisoryLevel);
+            return (
+              <button
+                key={country.countryCode}
+                type="button"
+                onClick={() => setSelectedSafetyCountry(country.countryCode)}
+                className="relative flex flex-col gap-2 rounded-md border border-hairline p-4 text-left"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <span className="flex items-center gap-2 text-title-md font-semibold">
+                    <span>{countryCodeToFlag(country.countryCode)}</span>
+                    {country.countryName}
+                  </span>
+                  <span className={`whitespace-nowrap rounded-full bg-canvas px-3 py-1 text-caption font-medium ${advisoryStatus.textColor}`}>
+                    {advisoryStatus.label}
+                  </span>
+                </div>
+                <div className="mt-2 flex flex-col gap-2">
+                  <p className="text-body-sm text-body line-clamp-2">
+                    {country.categories.security[0]}
+                  </p>
+                  <p className="text-right text-caption text-muted">
+                    {country.verifiedAt}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </section>
 

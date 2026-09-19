@@ -108,31 +108,35 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="flex flex-1 flex-col">{children}</main>
 
         <footer className="border-t border-hairline bg-canvas px-4 py-8 md:px-20 md:py-12">
-          <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-8 text-body-md md:grid-cols-3">
-            <div className="flex flex-col gap-3">
+          <div className="mx-auto flex max-w-[1280px] divide-x divide-hairline text-body-md">
+            <div className="flex flex-col gap-2 pr-6">
               <h2 className="text-title-md font-semibold">서비스</h2>
-              {FOOTER_SERVICE_LINKS.map((link) => (
-                <Link key={link.href} href={link.href} className="text-body">
-                  {link.label}
-                </Link>
-              ))}
+              <div className="flex flex-wrap gap-4">
+                {FOOTER_SERVICE_LINKS.map((link) => (
+                  <Link key={link.href} href={link.href} className="text-body">
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2 px-6">
               <h2 className="text-title-md font-semibold">정책</h2>
-              {FOOTER_POLICY_LINKS.map((link) => (
-                <Link key={link.href} href={link.href} className="text-body">
-                  {link.label}
-                </Link>
-              ))}
+              <div className="flex flex-wrap gap-4">
+                {FOOTER_POLICY_LINKS.map((link) => (
+                  <Link key={link.href} href={link.href} className="text-body">
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2 pl-6">
               <h2 className="text-title-md font-semibold">문의</h2>
               <Link href="/contact" className="text-body">
                 고객 문의
               </Link>
             </div>
           </div>
-          <p className="mx-auto mt-8 max-w-[1280px] text-caption text-muted">
+          <p className="mx-auto mt-6 max-w-[1280px] text-caption text-muted">
             © Free Traveler. 안전정보는 외교부 해외안전여행 공식 발표를 우선
             확인하세요.
           </p>
