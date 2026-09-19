@@ -1,6 +1,6 @@
 {
   "schema_version": "traveler-wave-state-v1",
-  "generated_at": "2026-09-16T12:36:20+00:00",
+  "generated_at": "2026-09-19T05:26:24+00:00",
   "waves": [
     {
       "wave_id": "W01",
@@ -14,39 +14,9 @@
         "CMP-GLOBAL-ROOT-ERROR-BOUNDARY",
         "DATA-DESTINATIONS"
       ],
-      "status": "in_progress",
+      "status": "pending",
       "checkpoint_required": false,
-      "checkpoint_result": null,
-      "tasks": [
-        {
-          "task_id": "CMP-GLOBAL-DESIGN-TOKENS",
-          "status": "completed"
-        },
-        {
-          "task_id": "CMP-GLOBAL-A11Y",
-          "status": "completed"
-        },
-        {
-          "task_id": "CMP-GLOBAL-HEADER-FOOTER",
-          "status": "pending"
-        },
-        {
-          "task_id": "CMP-GLOBAL-ERROR-BOUNDARY",
-          "status": "pending"
-        },
-        {
-          "task_id": "CMP-GLOBAL-NOT-FOUND",
-          "status": "pending"
-        },
-        {
-          "task_id": "CMP-GLOBAL-ROOT-ERROR-BOUNDARY",
-          "status": "pending"
-        },
-        {
-          "task_id": "DATA-DESTINATIONS",
-          "status": "pending"
-        }
-      ]
+      "checkpoint_result": null
     },
     {
       "wave_id": "W02",
@@ -135,9 +105,35 @@
         "CMP-SCR004-REPORT-BLOCK",
         "PAGE-SCR004"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": true,
-      "checkpoint_result": null
+      "checkpoint_result": {
+        "confirmed_by": "human",
+        "confirmed_at": "2026-09-19",
+        "note": "모든 기능(필터·목록·상세·신청·신고·차단) 정상 작동 확인. 데스크탑 전체 화면 layout issue 발견, 향후 개선 예정."
+      },
+      "tasks": [
+        {
+          "task_id": "CMP-SCR004-APPLICATION",
+          "status": "completed"
+        },
+        {
+          "task_id": "CMP-SCR004-DETAIL-PANEL",
+          "status": "completed"
+        },
+        {
+          "task_id": "CMP-SCR004-FILTER-LIST",
+          "status": "completed"
+        },
+        {
+          "task_id": "CMP-SCR004-REPORT-BLOCK",
+          "status": "completed"
+        },
+        {
+          "task_id": "PAGE-SCR004",
+          "status": "completed"
+        }
+      ]
     },
     {
       "wave_id": "W08",
@@ -149,9 +145,35 @@
         "CMP-SCR005-PROFILE",
         "PAGE-SCR005"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": true,
-      "checkpoint_result": null
+      "checkpoint_result": {
+        "confirmed_by": "human",
+        "confirmed_at": "2026-09-19",
+        "note": "로그인·프로필·내 활동·관리자 기능 모두 정상 작동 확인."
+      },
+      "tasks": [
+        {
+          "task_id": "CMP-SCR005-ADMIN",
+          "status": "completed"
+        },
+        {
+          "task_id": "CMP-SCR005-AUTH",
+          "status": "completed"
+        },
+        {
+          "task_id": "CMP-SCR005-MY-ACTIVITY",
+          "status": "completed"
+        },
+        {
+          "task_id": "CMP-SCR005-PROFILE",
+          "status": "completed"
+        },
+        {
+          "task_id": "PAGE-SCR005",
+          "status": "completed"
+        }
+      ]
     },
     {
       "wave_id": "W09",
@@ -165,9 +187,18 @@
         "E2E-PUBLIC-SMOKE",
         "E2E-TRAVEL-TOOLS"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": false,
-      "checkpoint_result": null
+      "checkpoint_result": null,
+      "tasks": [
+        {"task_id": "CI-BUILD-LINT-GATE", "status": "completed"},
+        {"task_id": "CI-CONTENT-VALIDATION", "status": "completed"},
+        {"task_id": "CI-SECURITY-BASELINE", "status": "completed"},
+        {"task_id": "CMP-GLOBAL-SEO-META", "status": "completed"},
+        {"task_id": "E2E-MATE-AUTH", "status": "completed"},
+        {"task_id": "E2E-PUBLIC-SMOKE", "status": "completed"},
+        {"task_id": "E2E-TRAVEL-TOOLS", "status": "completed"}
+      ]
     },
     {
       "wave_id": "W10",
@@ -180,9 +211,17 @@
         "UNIT-MATE-STATE",
         "UNIT-TRAVEL-DATES"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": false,
-      "checkpoint_result": null
+      "checkpoint_result": null,
+      "tasks": [
+        {"task_id": "MANUAL-A11Y-CHECK", "status": "completed"},
+        {"task_id": "MANUAL-PERF-CHECK", "status": "completed"},
+        {"task_id": "TEST-RLS-BASIC", "status": "completed"},
+        {"task_id": "UNIT-CONTACT-DETECTION", "status": "completed"},
+        {"task_id": "UNIT-MATE-STATE", "status": "completed"},
+        {"task_id": "UNIT-TRAVEL-DATES", "status": "completed"}
+      ]
     },
     {
       "wave_id": "W11",
@@ -190,9 +229,12 @@
       "task_ids": [
         "RELEASE-CHECK-VERCEL-SUPABASE"
       ],
-      "status": "pending",
+      "status": "completed",
       "checkpoint_required": false,
-      "checkpoint_result": null
+      "checkpoint_result": null,
+      "tasks": [
+        {"task_id": "RELEASE-CHECK-VERCEL-SUPABASE", "status": "completed"}
+      ]
     }
   ]
 }
